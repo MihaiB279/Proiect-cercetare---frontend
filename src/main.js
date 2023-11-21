@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router';
+import router from './router/index.js';
 
 import { IonicVue } from '@ionic/vue';
 
@@ -23,6 +23,8 @@ import '@ionic/vue/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
+defineCustomElements(window);
 const app = createApp(App)
   .use(IonicVue)
   .use(router);

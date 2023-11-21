@@ -7,22 +7,45 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Blank</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
-      <div id="container">
-        <strong>Ready to create an app?</strong>
-        <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-      </div>
+      <ion-fab>
+        <ion-fab-button @click="capturePhoto">
+          <ion-icon :icon="camera()"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
     </ion-content>
   </ion-page>
 </template>
 
-<script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+<script setup>
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonFab, IonIcon, IonFabButton} from '@ionic/vue';
+import {useCamera} from '@/services/useCamera';
+import {camera} from 'ionicons/icons';
+
+export default {
+  setup(){
+
+    const {getPhoto, getStoredPhotos, savePhotoToPreferences} = useCamera();
+    const {readFile, writeFile, deleteFile} = useFilesystem();
+    const capturePhoto = async () => {
+      const {base64String} = await getPhoto();
+      const filepath = new Date().getTime() + '.jpeg';
+      await writeFile(filepath, base64String);
+      const webviewPath = `data:image/jpeg;base64,${base64String}`;
+      const newPhoto = {filepath, webviewPath};
+      storedPhotos.value.push(newPhoto);
+      await savePhotoToPreferences(newPhoto);
+
+    return {
+      capturePhoto,
+    }
+    };
+  },
+  methods: {
+    camera() {
+      return camera
+    },
+  },
+}
 </script>
 
 <style scoped>
