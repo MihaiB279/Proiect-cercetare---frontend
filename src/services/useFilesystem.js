@@ -1,5 +1,4 @@
 import { Directory, Filesystem } from '@capacitor/filesystem';
-import { ref } from 'vue';
 
 export function useFilesystem() {
     const readFile = async (path) => {
