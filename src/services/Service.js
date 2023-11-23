@@ -12,7 +12,7 @@ class Service {
                 },
             });
 
-            return response.data; // Return the response data if needed
+            return response.data;
         } catch (error) {
             console.error('Error saving photo:', error);
             return null;
@@ -22,7 +22,7 @@ class Service {
     async fetchPhotos() {
         try {
             const response = await axios.get(PHOTOS_API_BASE_URL + '/options');
-            return response.data; // Return the array of image byte arrays
+            return response.data;
         } catch (error) {
             console.error('Error fetching images:', error);
             return [];

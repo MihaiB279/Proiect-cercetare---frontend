@@ -22,7 +22,6 @@
 <script>
 import {IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonFab, IonIcon, IonFabButton} from '@ionic/vue';
 import {useCamera} from '@/services/useCamera';
-import {useFilesystem} from '@/services/useFilesystem';
 import {camera} from 'ionicons/icons';
 import {useRouter} from "vue-router";
 import Service from "@/services/Service.js";
@@ -31,34 +30,28 @@ export default {
   setup() {
 
     const router = useRouter();
-    const {getPhoto, getStoredPhotos, savePhotoToPreferences} = useCamera();
-    const {readFile, writeFile, deleteFile} = useFilesystem();
+    const {getPhoto} = useCamera();
 
     const capturePhoto = async () => {
       const { base64String } = await getPhoto();
-      const blob = base64toBlob(base64String); // Convert base64 string to Blob
+      const blob = base64toBlob(base64String);
       const formData = new FormData();
       const file = new File([blob], 'photo.jpeg', { type: 'image/jpeg' });
       formData.append('photo', file);
       try {
-        const savedPhoto = await Service.savePhoto(formData); // Send as FormData
+        const savedPhoto = await Service.savePhoto(formData);
 
-        // Handle the response from the backend if needed
         if (savedPhoto) {
-          // Handle success
           console.log('Photo successfully saved on the backend:', savedPhoto);
           await router.push("/options");
         } else {
-          // Handle failure
           console.error('Failed to save photo on the backend');
         }
       } catch (error) {
-        // Handle errors
         console.error('Error saving photo:', error);
       }
     };
 
-// Function to convert base64 string to Blob
     function base64toBlob(base64String) {
       const byteCharacters = atob(base64String);
       const byteArrays = [];
